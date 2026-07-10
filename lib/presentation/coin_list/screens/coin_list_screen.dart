@@ -4,8 +4,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 class CoinListScreen extends StatefulWidget {
-  CoinListScreen({Key? key, this.cryptoList}) : super(key: key);
-  List<Crypto>? cryptoList;
+  const CoinListScreen({super.key, this.cryptoList});
+  final List<Crypto>? cryptoList;
   @override
   _CoinListScreenState createState() => _CoinListScreenState();
 }
