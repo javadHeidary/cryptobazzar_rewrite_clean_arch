@@ -12,38 +12,36 @@ class CoinListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) {
-        final bloc = CoinListBloc();
-        bloc.add(CoinFetchListEvent());
-        return bloc;
-      },
-      child: Scaffold(
-        backgroundColor: blackColor,
-        appBar: _appBarWidget(),
-        body: SafeArea(
-          child: Column(
-            children: [
-              _searchBarWidget(context),
-              BlocConsumer<CoinListBloc, CoinListState>(
-                listener: (context, state) {
-                  if (state is CoinListFailedState) {
-                    ScaffoldMessenger.of(
-                      context,
-                    ).showSnackBar(SnackBar(content: Text(state.message)));
-                  }
-                },
-                builder: (context, state) => Expanded(
-                  child: RefreshIndicator(
-                    backgroundColor: greenColor,
-                    color: blackColor,
-                    onRefresh: () async {
-                      context.read<CoinListBloc>().add(CoinFetchListEvent());
+      create: (_) => CoinListBloc()..add(CoinFetchListEvent()),
+      child: Builder(
+        builder: (context) => Scaffold(
+          backgroundColor: blackColor,
+          appBar: _appBarWidget(),
+          body: SafeArea(
+            child: Column(
+              children: [
+                _searchBarWidget(context),
+                Expanded(
+                  child: BlocConsumer<CoinListBloc, CoinListState>(
+                    listener: (context, state) {
+                      if (state is CoinListFailedState) {
+                        ScaffoldMessenger.of(
+                          context,
+                        ).showSnackBar(SnackBar(content: Text(state.message)));
+                      }
                     },
-                    child: _buildByState(state: state),
+                    builder: (context, state) => RefreshIndicator(
+                      backgroundColor: greenColor,
+                      color: blackColor,
+                      onRefresh: () async {
+                        context.read<CoinListBloc>().add(CoinFetchListEvent());
+                      },
+                      child: _buildByState(state: state),
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -82,7 +80,7 @@ class CoinListScreen extends StatelessWidget {
   }
 
   Widget _loadingWidget() {
-    return Center(child: SpinKitWave(color: Colors.greenAccent, size: 30.0));
+    return Center(child: SpinKitWave(color: Colors.white, size: 30.0));
   }
 
   Padding _searchBarWidget(BuildContext context) {
@@ -109,16 +107,14 @@ class CoinListScreen extends StatelessWidget {
             fillColor: const Color.fromARGB(255, 26, 182, 135),
           ),
           cursorColor: Colors.white,
+
+          style: TextStyle(color: Colors.white, fontFamily: 'iranYekan'),
         ),
       ),
     );
   }
 
   Future<void> _filterList(String enteredKeyword, BuildContext context) async {
-    if (enteredKeyword.isEmpty) {
-      context.read<CoinListBloc>().add(CoinFetchListEvent());
-      return;
-    }
     context.read<CoinListBloc>().add(
       CoinFilterListEvent(searchQuery: enteredKeyword),
     );

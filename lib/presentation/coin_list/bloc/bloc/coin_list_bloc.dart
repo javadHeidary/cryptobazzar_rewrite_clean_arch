@@ -9,6 +9,8 @@ part 'coin_list_event.dart';
 part 'coin_list_state.dart';
 
 class CoinListBloc extends Bloc<CoinListEvent, CoinListState> {
+  List<Crypto> _allCryptos = [];
+
   CoinListBloc() : super(CoinListInitialState()) {
     on<CoinFetchListEvent>((event, emit) async {
       emit(CoinLoadingState());
@@ -16,33 +18,30 @@ class CoinListBloc extends Bloc<CoinListEvent, CoinListState> {
         final response = await Dio().get(
           'https://rest.coincap.io/v3/assets?apiKey=658ec474b1f482e18ab745c9b26c4cb4a9a4f31486679c749c0e65b8d9b1ab25',
         );
-        List<Crypto> cryptoList = response.data['data']
+        _allCryptos = response.data['data']
             .map<Crypto>((jsonMapObject) => Crypto.fromMapJson(jsonMapObject))
             .toList();
-        emit(CoinListSuccessState(cryptos: cryptoList));
+        emit(CoinListSuccessState(cryptos: _allCryptos));
       } on DioException catch (e) {
         emit(CoinListFailedState(message: _translateException(e)));
       } catch (e) {
         developer.log(e.toString());
-        CoinListFailedState(message: 'خطایی در پردازش اطلاعات رخ داد است');
+        emit(
+          CoinListFailedState(message: 'خطایی در پردازش اطلاعات رخ داد است'),
+        );
       }
     });
 
     on<CoinFilterListEvent>((event, emit) async {
-      emit(CoinLoadingState());
       try {
-        final response = await Dio().get(
-          'https://rest.coincap.io/v3/assets?apiKey=658ec474b1f482e18ab745c9b26c4cb4a9a4f31486679c749c0e65b8d9b1ab25',
-        );
-        List<Crypto> cryptoList = response.data['data']
-            .map<Crypto>((jsonMapObject) => Crypto.fromMapJson(jsonMapObject))
+        List<Crypto> filterCryptos = _allCryptos
             .where(
               (crypto) => crypto.name.toLowerCase().contains(
                 event.searchQuery.toLowerCase(),
               ),
             )
             .toList();
-        emit(CoinListSuccessState(cryptos: cryptoList));
+        emit(CoinListSuccessState(cryptos: filterCryptos));
       } on DioException catch (e) {
         final message = _translateException(e);
         emit(CoinListFailedState(message: message));
