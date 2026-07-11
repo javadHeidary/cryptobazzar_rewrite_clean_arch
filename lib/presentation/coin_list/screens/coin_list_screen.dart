@@ -1,124 +1,139 @@
 import 'package:cryptobazzar_refactor_clean_arch/core/constants/app_colors.dart';
 import 'package:cryptobazzar_refactor_clean_arch/domain/entities/crypto.dart';
+import 'package:cryptobazzar_refactor_clean_arch/presentation/coin_list/bloc/bloc/coin_list_bloc.dart';
 import 'package:cryptobazzar_refactor_clean_arch/presentation/coin_list/widget/crypto_item.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-class CoinListScreen extends StatefulWidget {
-  const CoinListScreen({super.key, this.cryptoList});
-  final List<Crypto>? cryptoList;
-  @override
-  _CoinListScreenState createState() => _CoinListScreenState();
-}
-
-class _CoinListScreenState extends State<CoinListScreen> {
-  List<Crypto>? cryptoList;
-  bool isSearchLoadingVisible = false;
-  @override
-  void initState() {
-    super.initState();
-    cryptoList = widget.cryptoList;
-  }
+class CoinListScreen extends StatelessWidget {
+  const CoinListScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: blackColor,
-      appBar: AppBar(
+    return BlocProvider(
+      create: (_) {
+        final bloc = CoinListBloc();
+        bloc.add(CoinFetchListEvent());
+        return bloc;
+      },
+      child: Scaffold(
         backgroundColor: blackColor,
-        title: Text(
-          'کیریپتو بازار',
-          style: TextStyle(fontFamily: 'mr', color: Colors.white),
-        ),
-        centerTitle: true,
-        automaticallyImplyLeading: false,
-      ),
-      body: SafeArea(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8),
-              child: Directionality(
-                textDirection: TextDirection.rtl,
-                child: TextField(
-                  onChanged: (value) {
-                    _filterList(value);
-                  },
-                  decoration: InputDecoration(
-                    hintText: 'اسم رمزارز معتبر را سرچ کنید... ',
-                    hintStyle: TextStyle(
-                      fontFamily: 'iranYekan',
-                      color: Colors.white,
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide(width: 0, style: BorderStyle.none),
-                    ),
-                    filled: true,
-                    fillColor: const Color.fromARGB(255, 26, 182, 135),
+        appBar: _appBarWidget(),
+        body: SafeArea(
+          child: Column(
+            children: [
+              _searchBarWidget(context),
+              BlocConsumer<CoinListBloc, CoinListState>(
+                listener: (context, state) {
+                  if (state is CoinListFailedState) {
+                    ScaffoldMessenger.of(
+                      context,
+                    ).showSnackBar(SnackBar(content: Text(state.message)));
+                  }
+                },
+                builder: (context, state) => Expanded(
+                  child: RefreshIndicator(
+                    backgroundColor: greenColor,
+                    color: blackColor,
+                    onRefresh: () async {
+                      context.read<CoinListBloc>().add(CoinFetchListEvent());
+                    },
+                    child: _buildByState(state: state),
                   ),
                 ),
               ),
-            ),
-            Visibility(
-              visible: isSearchLoadingVisible,
-              child: Text(
-                '...در حال اپدیت اطلاعات رمز ارزها',
-                style: TextStyle(color: greenColor, fontFamily: 'mr'),
-              ),
-            ),
-            Expanded(
-              child: RefreshIndicator(
-                backgroundColor: greenColor,
-                color: blackColor,
-                onRefresh: () async {
-                  List<Crypto> fereshData = await _getData();
-                  setState(() {
-                    cryptoList = fereshData;
-                  });
-                },
-                child: ListView.builder(
-                  itemCount: cryptoList!.length,
-                  itemBuilder: (context, index) =>
-                      CryptoItem(crypto: cryptoList![index]),
-                ),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Future<List<Crypto>> _getData() async {
-    var response = await Dio().get(
-      'https://rest.coincap.io/v3/assets?apiKey=658ec474b1f482e18ab745c9b26c4cb4a9a4f31486679c749c0e65b8d9b1ab25',
+  AppBar _appBarWidget() {
+    return AppBar(
+      backgroundColor: blackColor,
+      title: Text(
+        'کیریپتو بازار',
+        style: TextStyle(fontFamily: 'mr', color: Colors.white),
+      ),
+      centerTitle: true,
+      automaticallyImplyLeading: false,
     );
-    List<Crypto> cryptoList = response.data['data']
-        .map<Crypto>((jsonMapObject) => Crypto.fromMapJson(jsonMapObject))
-        .toList();
-    return cryptoList;
   }
 
-  Future<void> _filterList(String enteredKeyword) async {
-    List<Crypto> cryptoResultList = [];
+  Widget _buildByState({required CoinListState state}) {
+    return switch (state) {
+      CoinListInitialState() => SizedBox.shrink(),
+
+      CoinLoadingState() => _loadingWidget(),
+
+      CoinListSuccessState() => _CoinListView(ctyptos: state.cryptos),
+
+      CoinListFailedState() => failedWidget(state),
+    };
+  }
+
+  Text failedWidget(CoinListFailedState state) {
+    return Text(
+      state.message,
+      style: TextStyle(color: greenColor, fontFamily: 'mr'),
+    );
+  }
+
+  Widget _loadingWidget() {
+    return Center(child: SpinKitWave(color: Colors.greenAccent, size: 30.0));
+  }
+
+  Padding _searchBarWidget(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8),
+      child: Directionality(
+        textDirection: TextDirection.rtl,
+        child: TextField(
+          onChanged: (value) {
+            _filterList(value, context);
+          },
+          decoration: InputDecoration(
+            hintText: 'اسم رمزارز معتبر را سرچ کنید... ',
+            hintStyle: TextStyle(fontFamily: 'iranYekan', color: Colors.white),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide(style: BorderStyle.none),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide(style: BorderStyle.none),
+            ),
+            filled: true,
+            fillColor: const Color.fromARGB(255, 26, 182, 135),
+          ),
+          cursorColor: Colors.white,
+        ),
+      ),
+    );
+  }
+
+  Future<void> _filterList(String enteredKeyword, BuildContext context) async {
     if (enteredKeyword.isEmpty) {
-      setState(() {
-        isSearchLoadingVisible = true;
-      });
-      var result = await _getData();
-      setState(() {
-        cryptoList = result;
-        isSearchLoadingVisible = false;
-      });
+      context.read<CoinListBloc>().add(CoinFetchListEvent());
       return;
     }
-    cryptoResultList = cryptoList!.where((element) {
-      return element.name.toLowerCase().contains(enteredKeyword.toLowerCase());
-    }).toList();
+    context.read<CoinListBloc>().add(
+      CoinFilterListEvent(searchQuery: enteredKeyword),
+    );
+  }
+}
 
-    setState(() {
-      cryptoList = cryptoResultList;
-    });
+class _CoinListView extends StatelessWidget {
+  final List<Crypto> ctyptos;
+  const _CoinListView({required this.ctyptos});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemCount: ctyptos.length,
+      itemBuilder: (context, index) => CryptoItem(crypto: ctyptos[index]),
+    );
   }
 }

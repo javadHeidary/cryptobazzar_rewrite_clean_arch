@@ -10,6 +10,10 @@ class CryptoBazzarApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(title: 'Crypto Bazzar', home: CoinListScreen());
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Crypto Bazzar',
+      home: CoinListScreen(),
+    );
   }
 }

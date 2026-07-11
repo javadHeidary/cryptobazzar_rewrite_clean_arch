@@ -47,9 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (context) => CoinListScreen(cryptoList: cryptoList),
-      ),
+      MaterialPageRoute(builder: (context) => CoinListScreen()),
     );
   }
 }
