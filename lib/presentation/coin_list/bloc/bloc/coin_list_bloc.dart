@@ -2,6 +2,7 @@ import 'dart:developer' as developer;
 
 import 'package:bloc/bloc.dart';
 import 'package:cryptobazzar_refactor_clean_arch/domain/entities/crypto.dart';
+import 'package:cryptobazzar_refactor_clean_arch/domain/usecase/coin_usecase.dart';
 import 'package:dio/dio.dart';
 import 'package:meta/meta.dart';
 
@@ -9,18 +10,13 @@ part 'coin_list_event.dart';
 part 'coin_list_state.dart';
 
 class CoinListBloc extends Bloc<CoinListEvent, CoinListState> {
+  final CoinUsecase _coinUsecase;
   List<Crypto> _allCryptos = [];
-
-  CoinListBloc() : super(CoinListInitialState()) {
+  CoinListBloc(this._coinUsecase) : super(CoinListInitialState()) {
     on<CoinFetchListEvent>((event, emit) async {
       emit(CoinLoadingState());
       try {
-        final response = await Dio().get(
-          'https://rest.coincap.io/v3/assets?apiKey=658ec474b1f482e18ab745c9b26c4cb4a9a4f31486679c749c0e65b8d9b1ab25',
-        );
-        _allCryptos = response.data['data']
-            .map<Crypto>((jsonMapObject) => Crypto.fromMapJson(jsonMapObject))
-            .toList();
+        _allCryptos = await _coinUsecase.getCoinList();
         emit(CoinListSuccessState(cryptos: _allCryptos));
       } on DioException catch (e) {
         emit(CoinListFailedState(message: _translateException(e)));

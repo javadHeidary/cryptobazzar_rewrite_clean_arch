@@ -1,5 +1,7 @@
 import 'package:cryptobazzar_refactor_clean_arch/core/constants/app_colors.dart';
+import 'package:cryptobazzar_refactor_clean_arch/core/di/service_locator.dart';
 import 'package:cryptobazzar_refactor_clean_arch/domain/entities/crypto.dart';
+import 'package:cryptobazzar_refactor_clean_arch/domain/usecase/coin_usecase.dart';
 import 'package:cryptobazzar_refactor_clean_arch/presentation/coin_list/bloc/bloc/coin_list_bloc.dart';
 import 'package:cryptobazzar_refactor_clean_arch/presentation/coin_list/widget/crypto_item.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +14,8 @@ class CoinListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => CoinListBloc()..add(CoinFetchListEvent()),
+      create: (_) =>
+          CoinListBloc(di.get<CoinUsecase>())..add(CoinFetchListEvent()),
       child: Builder(
         builder: (context) => Scaffold(
           backgroundColor: blackColor,
@@ -114,7 +117,7 @@ class CoinListScreen extends StatelessWidget {
     );
   }
 
-  Future<void> _filterList(String enteredKeyword, BuildContext context) async {
+  void _filterList(String enteredKeyword, BuildContext context) {
     context.read<CoinListBloc>().add(
       CoinFilterListEvent(searchQuery: enteredKeyword),
     );
