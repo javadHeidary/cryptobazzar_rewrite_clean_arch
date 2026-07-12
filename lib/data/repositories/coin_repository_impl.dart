@@ -9,4 +9,9 @@ class CoinRepositoryImpl implements CoinRepository {
   Future<List<Crypto>> getCoinList() {
     return _coinDatasource.getCoinList();
   }
+
+  @override
+  Future<List<Crypto>> getSearchCoinList({required String searchQuery}) {
+    return _coinDatasource.getSearchCoinList(searchQuery: searchQuery);
+  }
 }

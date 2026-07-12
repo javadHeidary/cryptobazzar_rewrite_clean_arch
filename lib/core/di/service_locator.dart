@@ -46,6 +46,8 @@ Future<void> _initRepositories() async {
 
 Future<void> _initUseCases() async {
   if (!di.isRegistered<CoinUsecase>()) {
-    di.registerSingleton<CoinUsecase>(CoinListUseCase(di.get<CoinRepository>()));
+    di.registerSingleton<CoinUsecase>(
+      CoinListUseCase(di.get<CoinRepository>()),
+    );
   }
 }

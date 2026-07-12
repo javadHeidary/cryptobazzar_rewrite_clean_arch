@@ -3,6 +3,7 @@ import 'package:cryptobazzar_refactor_clean_arch/domain/repositories/coin_reposi
 
 abstract class CoinUsecase {
   Future<List<Crypto>> getCoinList();
+  Future<List<Crypto>> getSearchCoinList({required String searchQuery});
 }
 
 class CoinListUseCase implements CoinUsecase {
@@ -12,5 +13,10 @@ class CoinListUseCase implements CoinUsecase {
   @override
   Future<List<Crypto>> getCoinList() async {
     return await _coinRepository.getCoinList();
+  }
+
+  @override
+  Future<List<Crypto>> getSearchCoinList({required String searchQuery}) async {
+    return await _coinRepository.getSearchCoinList(searchQuery: searchQuery);
   }
 }

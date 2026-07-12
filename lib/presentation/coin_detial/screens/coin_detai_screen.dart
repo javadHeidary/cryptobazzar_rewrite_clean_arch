@@ -1,23 +1,10 @@
-import 'package:cryptobazzar_refactor_clean_arch/domain/entities/crypto.dart';
-import 'package:cryptobazzar_refactor_clean_arch/presentation/coin_list/screens/coin_list_screen.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class HomeScreen extends StatelessWidget {
+  HomeScreen({super.key});
 
-  @override
-  _HomeScreenState createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
   String title = 'loading....';
-  @override
-  void initState() {
-    super.initState();
-    getData();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,20 +21,6 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
-    );
-  }
-
-  Future<void> getData() async {
-    var response = await Dio().get(
-      'https://rest.coincap.io/v3/assets?apiKey=658ec474b1f482e18ab745c9b26c4cb4a9a4f31486679c749c0e65b8d9b1ab25',
-    );
-    List<Crypto> cryptoList = response.data['data']
-        .map<Crypto>((jsonMapObject) => Crypto.fromMapJson(jsonMapObject))
-        .toList();
-
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => CoinListScreen()),
     );
   }
 }

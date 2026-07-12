@@ -30,13 +30,9 @@ class CoinListBloc extends Bloc<CoinListEvent, CoinListState> {
 
     on<CoinFilterListEvent>((event, emit) async {
       try {
-        List<Crypto> filterCryptos = _allCryptos
-            .where(
-              (crypto) => crypto.name.toLowerCase().contains(
-                event.searchQuery.toLowerCase(),
-              ),
-            )
-            .toList();
+        List<Crypto> filterCryptos = await _coinUsecase.getSearchCoinList(
+          searchQuery: event.searchQuery,
+        );
         emit(CoinListSuccessState(cryptos: filterCryptos));
       } on DioException catch (e) {
         final message = _translateException(e);
