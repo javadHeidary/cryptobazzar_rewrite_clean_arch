@@ -1,9 +1,9 @@
 import 'dart:developer' as developer;
 
-import 'package:cryptobazzar_refactor_clean_arch/data/datasources/coin_datasource.dart';
-import 'package:cryptobazzar_refactor_clean_arch/data/dtos/crypto_dto.dart';
-import 'package:cryptobazzar_refactor_clean_arch/data/mapper/crypto_mapper.dart';
-import 'package:cryptobazzar_refactor_clean_arch/domain/entities/crypto.dart';
+import 'package:cryptoBazzar/data/datasources/coin_datasource.dart';
+import 'package:cryptoBazzar/data/dtos/crypto_dto.dart';
+import 'package:cryptoBazzar/data/mapper/crypto_mapper.dart';
+import 'package:cryptoBazzar/domain/entities/crypto.dart';
 import 'package:dio/dio.dart';
 
 class CoinRemoteDatasource implements CoinDatasource {

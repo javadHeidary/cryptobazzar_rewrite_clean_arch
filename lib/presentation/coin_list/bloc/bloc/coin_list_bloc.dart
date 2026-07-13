@@ -1,8 +1,8 @@
 import 'dart:developer' as developer;
 
 import 'package:bloc/bloc.dart';
-import 'package:cryptobazzar_refactor_clean_arch/domain/entities/crypto.dart';
-import 'package:cryptobazzar_refactor_clean_arch/domain/usecase/coin_usecase.dart';
+import 'package:cryptoBazzar/domain/entities/crypto.dart';
+import 'package:cryptoBazzar/domain/usecase/coin_usecase.dart';
 import 'package:dio/dio.dart';
 import 'package:meta/meta.dart';
 

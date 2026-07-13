@@ -1,9 +1,9 @@
-import 'package:cryptobazzar_refactor_clean_arch/core/network/dio_clinet.dart';
-import 'package:cryptobazzar_refactor_clean_arch/data/datasources/coin_datasource.dart';
-import 'package:cryptobazzar_refactor_clean_arch/data/datasources/coin_remote_datasource.dart';
-import 'package:cryptobazzar_refactor_clean_arch/data/repositories/coin_repository_impl.dart';
-import 'package:cryptobazzar_refactor_clean_arch/domain/repositories/coin_repository.dart';
-import 'package:cryptobazzar_refactor_clean_arch/domain/usecase/coin_usecase.dart';
+import 'package:cryptoBazzar/core/network/dio_clinet.dart';
+import 'package:cryptoBazzar/data/datasources/coin_datasource.dart';
+import 'package:cryptoBazzar/data/datasources/coin_remote_datasource.dart';
+import 'package:cryptoBazzar/data/repositories/coin_repository_impl.dart';
+import 'package:cryptoBazzar/domain/repositories/coin_repository.dart';
+import 'package:cryptoBazzar/domain/usecase/coin_usecase.dart';
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 

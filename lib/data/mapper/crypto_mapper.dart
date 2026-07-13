@@ -1,5 +1,5 @@
-import 'package:cryptobazzar_refactor_clean_arch/data/dtos/crypto_dto.dart';
-import 'package:cryptobazzar_refactor_clean_arch/domain/entities/crypto.dart';
+import 'package:cryptoBazzar/data/dtos/crypto_dto.dart';
+import 'package:cryptoBazzar/domain/entities/crypto.dart';
 
 class CryptoMapper {
   static Crypto toDomain(CryptoDto dtoObject) {

@@ -1,5 +1,5 @@
-import 'package:cryptobazzar_refactor_clean_arch/core/constants/app_colors.dart';
-import 'package:cryptobazzar_refactor_clean_arch/domain/entities/crypto.dart';
+import 'package:cryptoBazzar/core/constants/app_colors.dart';
+import 'package:cryptoBazzar/domain/entities/crypto.dart';
 import 'package:flutter/material.dart';
 
 class CryptoItem extends StatelessWidget {

@@ -1,9 +1,9 @@
-import 'package:cryptobazzar_refactor_clean_arch/core/constants/app_colors.dart';
-import 'package:cryptobazzar_refactor_clean_arch/core/di/service_locator.dart';
-import 'package:cryptobazzar_refactor_clean_arch/domain/entities/crypto.dart';
-import 'package:cryptobazzar_refactor_clean_arch/domain/usecase/coin_usecase.dart';
-import 'package:cryptobazzar_refactor_clean_arch/presentation/coin_list/bloc/bloc/coin_list_bloc.dart';
-import 'package:cryptobazzar_refactor_clean_arch/presentation/coin_list/widget/crypto_item.dart';
+import 'package:cryptoBazzar/core/constants/app_colors.dart';
+import 'package:cryptoBazzar/core/di/service_locator.dart';
+import 'package:cryptoBazzar/domain/entities/crypto.dart';
+import 'package:cryptoBazzar/domain/usecase/coin_usecase.dart';
+import 'package:cryptoBazzar/presentation/coin_list/bloc/bloc/coin_list_bloc.dart';
+import 'package:cryptoBazzar/presentation/coin_list/widget/crypto_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';

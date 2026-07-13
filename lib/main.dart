@@ -1,5 +1,5 @@
-import 'package:cryptobazzar_refactor_clean_arch/core/di/service_locator.dart';
-import 'package:cryptobazzar_refactor_clean_arch/presentation/coin_list/screens/coin_list_screen.dart';
+import 'package:cryptoBazzar/core/di/service_locator.dart';
+import 'package:cryptoBazzar/presentation/coin_list/screens/coin_list_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() async {

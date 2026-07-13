@@ -1,4 +1,4 @@
-package com.example.cryptobazzar_refactor_clean_arch
+package com.cryptoBazzar
 
 import io.flutter.embedding.android.FlutterActivity
 

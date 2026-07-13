@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-class HomeScreen extends StatelessWidget {
-  HomeScreen({super.key});
+class SplashScreen extends StatelessWidget {
+  SplashScreen({super.key});
 
   String title = 'loading....';
 

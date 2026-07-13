@@ -1,5 +1,5 @@
-import 'package:cryptobazzar_refactor_clean_arch/domain/entities/crypto.dart';
-import 'package:cryptobazzar_refactor_clean_arch/domain/repositories/coin_repository.dart';
+import 'package:cryptoBazzar/domain/entities/crypto.dart';
+import 'package:cryptoBazzar/domain/repositories/coin_repository.dart';
 
 abstract class CoinUsecase {
   Future<List<Crypto>> getCoinList();
